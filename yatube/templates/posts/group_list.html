@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}Группа: {{ group.title }}{% endblock %}
+{% block content %}
+
+<!-- класс py-5 создает отступы сверху и снизу блока -->
+<div class="container py-5">
+  <div class="card-body">
+    <h1 class="card-title">{{ group.title }}</h1>
+    <p class="card-text">{{ group.description|linebreaks }}</p>
+    {% for post in page_obj %}
+    <ul>
+      <li>
+        Автор: {{ post.author.get_full_name }}
+        <a href="{% url 'posts:profile' post.author %}">- все посты пользователя</a>
+      </li>
+      <li>
+        Дата публикации: {{ post.pub_date|date:"d M Y" }}
+      </li>
+    </ul>
+    {% include 'include/thumbnail.html' %}
+    <p class="card-text">
+      {{post.text|linebreaksbr}}
+    </p>
+    <a href="{% url 'posts:post_detail' post.id %}" class="btn btn-primary">Подробная информация</a>
+    {% if not forloop.last %}
+    <hr>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% include 'include/paginator.html' %}
+{% endblock %}
