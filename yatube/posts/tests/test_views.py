@@ -116,7 +116,7 @@ class PostsPagesTests(TestCase):
     def test_show_correct_forms(self):
         url_fields = {
             reverse('posts:post_create'),
-            reverse('posts:post_edit', kwargs={'post_id': self.post.id,})
+            reverse('posts:post_edit', kwargs={'post_id': self.post.id})
         }
         for reverse_page in url_fields:
             with self.subTest(reverse_page=reverse_page):
@@ -139,17 +139,20 @@ class PostsPagesTests(TestCase):
         self.post_info(response.context['page_obj'][0])
 
     def test_group_post_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:group_list', kwargs={'slug': f'{self.group.slug}'}))
+        response = self.authorized_client.get(reverse('posts:group_list',
+                                                      kwargs={'slug': f'{self.group.slug}'}))
         self.post_info(response.context['page_obj'][0])
         self.assertEqual(response.context['group'], self.group)
 
     def test_profile_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:profile', kwargs={'username': f'{self.user.username}'}))
+        response = self.authorized_client.get(reverse('posts:profile',
+                                                      kwargs={'username': f'{self.user.username}'}))
         self.post_info(response.context['page_obj'][0])
         self.assertEqual(response.context['author'], self.user)
 
     def test_post_detail_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:post_detail', kwargs={'post_id': f'{self.post.id}'}))
+        response = self.authorized_client.get(reverse('posts:post_detail',
+                                                      kwargs={'post_id': f'{self.post.id}'}))
         self.post_info(response.context['post'])
 
     def test_cache_index_page(self):
@@ -167,6 +170,7 @@ class PostsPagesTests(TestCase):
         content_cache_clear = self.authorized_client.get(
                 reverse('posts:index')).content
         self.assertNotEqual(content_add, content_cache_clear)
+
 
 class FollowViewsTest(TestCase):
     @classmethod
@@ -223,7 +227,6 @@ class FollowViewsTest(TestCase):
         response = self.author_client.get(
             reverse('posts:follow_index'))
         self.assertIn(post, response.context['page_obj'].object_list)
-
 
     def test_notfollow_on_authors(self):
         """Проверка записей у тех кто не подписан."""
