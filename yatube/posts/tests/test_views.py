@@ -146,13 +146,15 @@ class PostsPagesTests(TestCase):
 
     def test_profile_show_correct_context(self):
         response = self.authorized_client.get(
-            reverse('posts:profile', kwargs={'username': f'{self.user.username}'}))
+            reverse('posts:profile',
+                    kwargs={'username': f'{self.user.username}'}))
         self.post_info(response.context['page_obj'][0])
         self.assertEqual(response.context['author'], self.user)
 
     def test_post_detail_show_correct_context(self):
         response = self.authorized_client.get(
-            reverse('posts:post_detail', kwargs={'post_id': f'{self.post.id}'}))
+            reverse('posts:post_detail',
+                    kwargs={'post_id': f'{self.post.id}'}))
         self.post_info(response.context['post'])
 
     def test_cache_index_page(self):
@@ -168,7 +170,7 @@ class PostsPagesTests(TestCase):
         self.assertEqual(content_add, content_delete)
         cache.clear()
         content_cache_clear = self.authorized_client.get(
-                reverse('posts:index')).content
+            reverse('posts:index')).content
         self.assertNotEqual(content_add, content_cache_clear)
 
 
