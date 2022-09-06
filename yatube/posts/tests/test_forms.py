@@ -138,7 +138,7 @@ class PostFormTests(TestCase):
         }
         response = self.authorized_user.post(
             reverse(
-                'post:edit',
+                'posts:post_edit',
                 args=[post.id]),
             data=form_data,
             follow=True
@@ -155,7 +155,7 @@ class PostFormTests(TestCase):
 
     def test_nonauthorized_user_create_post(self):
         # проверка создания записи не авторизованным пользователем
-        posts_count = Post.objects.all()
+        posts_count = Post.objects.count()
         form_data = {
             'text': 'non_auth_edit_text',
             'group': self.group.id

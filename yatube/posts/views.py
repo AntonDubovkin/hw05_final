@@ -8,6 +8,7 @@ from .models import Post, Group, User, Comment, Follow
 from .utils import paginate
 
 
+@cache_page(20)
 def index(request):
     """Возвращает главную страницу"""
     posts = Post.objects.select_related('author').all()
