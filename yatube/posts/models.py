@@ -83,8 +83,6 @@ class Comment(models.Model):
         User,
         related_name='comments',
         on_delete=models.CASCADE)
-        # когда объект, на который имеется ссылка, удаляется,
-        # все объекты, ссылающиеся на этот объект, также будут удалены
     created = models.DateTimeField(
         verbose_name='Дата комментария',
         auto_now_add=True)

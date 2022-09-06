@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import get_user_model
 from django.views.decorators.cache import cache_page
 
 from .forms import PostForm, CommentForm
-from .models import Post, Group, User, Comment, Follow
+from .models import Post, Group, User, Follow
 from .utils import paginate
 
 
@@ -96,7 +95,6 @@ def post_edit(request, post_id):
     """Возвращает редактирование поста, для залогиненного
     автора поста или предлагает создать пост"""
     post = get_object_or_404(Post, pk=post_id)
-    is_edit = True
     if request.user != post.author:
         return redirect('posts:post_detail', post_id=post_id)
     form = PostForm(

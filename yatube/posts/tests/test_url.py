@@ -40,12 +40,18 @@ class PostsURLTests(TestCase):
         """Проверка status_code для неавторизованного пользователя."""
         field_urls_code = {
             reverse('posts:index'): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': self.group.slug}): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
-            reverse('posts:profile', kwargs={'username': self.user_author}): HTTPStatus.OK,
-            reverse('posts:post_detail', kwargs={'post_id': self.post.id}): HTTPStatus.OK,
-            reverse('posts:post_edit', kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.FOUND,
-            reverse('posts:post_create'): HTTPStatus.FOUND, '/unexisting_page/': HTTPStatus.NOT_FOUND,
+            reverse('posts:group_list',
+                    kwargs={'slug': self.group.slug}): HTTPStatus.OK,
+            reverse('posts:group_list',
+                    kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
+            reverse('posts:profile',
+                    kwargs={'username': self.user_author}): HTTPStatus.OK,
+            reverse('posts:post_detail',
+                    kwargs={'post_id': self.post.id}): HTTPStatus.OK,
+            reverse('posts:post_edit',
+                    kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.FOUND,
+            reverse('posts:post_create'): HTTPStatus.FOUND,
+            '/unexisting_page/': HTTPStatus.NOT_FOUND,
         }
         for url, response_code in field_urls_code.items():
             with self.subTest(url=url):
@@ -56,12 +62,18 @@ class PostsURLTests(TestCase):
         """Проверка tatus_code для авторизованного пользователя"""
         field_urls_code = {
             reverse('posts:index'): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': self.group.slug}): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
-            reverse('posts:profile', kwargs={'username': self.user_author}): HTTPStatus.OK,
-            reverse('posts:post_detail', kwargs={'post_id': self.post.id}): HTTPStatus.OK,
-            reverse('posts:post_edit', kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.FOUND,
-            reverse('posts:post_create'): HTTPStatus.OK, '/unexisting_page/': HTTPStatus.NOT_FOUND,
+            reverse('posts:group_list',
+                    kwargs={'slug': self.group.slug}): HTTPStatus.OK,
+            reverse('posts:group_list',
+                    kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
+            reverse('posts:profile',
+                    kwargs={'username': self.user_author}): HTTPStatus.OK,
+            reverse('posts:post_detail',
+                    kwargs={'post_id': self.post.id}): HTTPStatus.OK,
+            reverse('posts:post_edit',
+                    kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.FOUND,
+            reverse('posts:post_create'):
+                HTTPStatus.OK, '/unexisting_page/': HTTPStatus.NOT_FOUND,
         }
         for url, response_code in field_urls_code.items():
             with self.subTest(url=url):
@@ -72,12 +84,18 @@ class PostsURLTests(TestCase):
         """Проверка tatus_code для автора"""
         field_urls_code = {
             reverse('posts:index'): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': self.group.slug}): HTTPStatus.OK,
-            reverse('posts:group_list', kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
-            reverse('posts:profile', kwargs={'username': self.user_author}): HTTPStatus.OK,
-            reverse('posts:post_detail', kwargs={'post_id': self.post.id}): HTTPStatus.OK,
-            reverse('posts:post_edit', kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.OK,
-            reverse('posts:post_create'): HTTPStatus.OK, '/unexisting_page/': HTTPStatus.NOT_FOUND,
+            reverse('posts:group_list',
+                    kwargs={'slug': self.group.slug}): HTTPStatus.OK,
+            reverse('posts:group_list',
+                    kwargs={'slug': 'bad_slug'}): HTTPStatus.NOT_FOUND,
+            reverse('posts:profile',
+                    kwargs={'username': self.user_author}): HTTPStatus.OK,
+            reverse('posts:post_detail',
+                    kwargs={'post_id': self.post.id}): HTTPStatus.OK,
+            reverse('posts:post_edit',
+                    kwargs={'post_id': f'{self.post.id}'}): HTTPStatus.OK,
+            reverse('posts:post_create'):
+                HTTPStatus.OK, '/unexisting_page/': HTTPStatus.NOT_FOUND,
         }
         for url, response_code in field_urls_code.items():
             with self.subTest(url=url):
@@ -88,11 +106,19 @@ class PostsURLTests(TestCase):
         """URL-адрес использует соответствующий шаблон."""
         templates_urls_names = {
             reverse('posts:index'): 'posts/index.html',
-            reverse('posts:group_list', kwargs={'slug': self.group.slug}): 'posts/group_list.html',
-            reverse('posts:profile', kwargs={'username': self.user_author}): 'posts/profile.html',
-            reverse('posts:post_detail', kwargs={'post_id': self.post.id}): 'posts/post_detail.html',
+            reverse('posts:group_list',
+                    kwargs={'slug': self.group.slug}):
+                'posts/group_list.html',
+            reverse('posts:profile',
+                    kwargs={'username': self.user_author}):
+                'posts/profile.html',
+            reverse('posts:post_detail',
+                    kwargs={'post_id': self.post.id}):
+                'posts/post_detail.html',
             reverse('posts:post_create'): 'posts/create_post.html',
-            reverse('posts:post_edit', kwargs={'post_id': f'{self.post.id}'}): 'posts/create_post.html',
+            reverse('posts:post_edit',
+                    kwargs={'post_id': f'{self.post.id}'}):
+                'posts/create_post.html',
             reverse('posts:follow_index'): 'posts/follow.html',
         }
         for urls, template in templates_urls_names.items():
