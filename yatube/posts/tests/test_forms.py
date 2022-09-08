@@ -28,15 +28,15 @@ class PostFormTests(TestCase):
         cls.comm_author = User.objects.create_user(
             username='comm_author'
         )
-        cls.group = Group.objects.create(
-            title='Test_title',
-            slug='test-slug',
-            description='Test_description'
+        cls.group_old = Group.objects.create(
+            title='Test_title_old',
+            slug='test-slug_old',
+            description='Test_description_old'
         )
-        cls.group2 = Group.objects.create(
-            title='Test_title2',
-            slug='test-slug2',
-            description='Test_description2'
+        cls.group_new = Group.objects.create(
+            title='Test_title_new',
+            slug='test-slug_new',
+            description='Test_description_new'
         )
 
     def setUp(self):
@@ -74,7 +74,7 @@ class PostFormTests(TestCase):
         )
         form_data = {
             'text': 'form_text',
-            'group': self.group.id,
+            'group': self.group_old.id,
             'image': uploaded,
         }
         response = self.authorized_user.post(
@@ -139,11 +139,11 @@ class PostFormTests(TestCase):
         post = Post.objects.create(
             text='post_text',
             author=self.post_author,
-            group=self.group
+            group=self.group_old
         )
         form_data = {
-            'text': 'post_text_edit2',
-            'group': self.group2.id
+            'text': 'post_text_edit',
+            'group': self.group_new.id
         }
         response = self.authorized_user.post(
             reverse(
@@ -161,17 +161,19 @@ class PostFormTests(TestCase):
         self.assertEqual(post_one.text, form_data['text'])
         self.assertEqual(post_one.author, self.post_author)
         self.assertEqual(post_one.group_id, form_data['group'])
-        self.assertTrue(Post.objects.filter(
-            group=self.group2.id,
-            author=self.post_author
-        ).exists())
+        self.assertFalse(
+            Post.objects.filter(
+                group=self.group_old.id,
+                text='post_text',
+            ).exists()
+        )
 
     def test_nonauthorized_user_create_post(self):
         """Проверка создания поста неавторизованным юзером"""
         posts_count = Post.objects.count()
         form_data = {
             'text': 'non_auth_edit_text',
-            'group': self.group.id
+            'group': self.group_old.id
         }
         response = self.guest_user.post(
             reverse('posts:post_create'),
