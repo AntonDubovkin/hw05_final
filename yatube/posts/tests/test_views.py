@@ -47,6 +47,7 @@ class PaginatorViewsTest(TestCase):
         cache.clear()
 
     def test_first_page_contains_ten_records(self):
+        """Проверка пагинации на первой странице"""
         TEST_OF_PAGI_1: int = 10
         for i in PaginatorViewsTest.templates.keys():
             with self.subTest(i=i):
@@ -56,6 +57,7 @@ class PaginatorViewsTest(TestCase):
                 ).object_list), TEST_OF_PAGI_1)
 
     def test_second_page_contains_three_records(self):
+        """Проверка пагинации на второй странице"""
         TEST_OF_PAGI_2: int = 3
         for i in PaginatorViewsTest.templates.keys():
             with self.subTest(i=i):
@@ -98,6 +100,7 @@ class PostsPagesTests(TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Очищаем кэш"""
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
@@ -114,6 +117,7 @@ class PostsPagesTests(TestCase):
             self.assertEqual(post.image, self.post.image)
 
     def test_show_correct_forms(self):
+        """Проверка корректности form"""
         url_fields = {
             reverse('posts:post_create'),
             reverse('posts:post_edit', kwargs={'post_id': self.post.id})
@@ -135,16 +139,19 @@ class PostsPagesTests(TestCase):
                 )
 
     def test_index_show_correct_context(self):
+        """Проверка контекста для index"""
         response = self.authorized_client.get(reverse('posts:index'))
         self.post_info(response.context['page_obj'][0])
 
     def test_group_post_show_correct_context(self):
+        """Проверка контекста для group_list"""
         response = self.authorized_client.get(
             reverse('posts:group_list', kwargs={'slug': f'{self.group.slug}'}))
         self.post_info(response.context['page_obj'][0])
         self.assertEqual(response.context['group'], self.group)
 
     def test_profile_show_correct_context(self):
+        """Проверка контекста для profile"""
         response = self.authorized_client.get(
             reverse('posts:profile',
                     kwargs={'username': f'{self.user.username}'}))
@@ -152,6 +159,7 @@ class PostsPagesTests(TestCase):
         self.assertEqual(response.context['author'], self.user)
 
     def test_post_detail_show_correct_context(self):
+        """Проверка контекста для post_detail"""
         response = self.authorized_client.get(
             reverse('posts:post_detail',
                     kwargs={'post_id': f'{self.post.id}'}))
@@ -196,6 +204,7 @@ class FollowViewsTest(TestCase):
         self.follower_client.force_login(self.post_autor)
 
     def test_follow_on_user(self):
+        """Проверка подписывания"""
         count_follow = Follow.objects.count()
         self.follower_client.post(
             reverse(
@@ -207,6 +216,7 @@ class FollowViewsTest(TestCase):
         self.assertEqual(follow.user_id, self.post_autor.id)
 
     def test_unfollow_on_user(self):
+        """Проверка отписывания"""
         Follow.objects.create(
             user=self.post_autor,
             author=self.post_follower

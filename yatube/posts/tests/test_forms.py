@@ -33,6 +33,11 @@ class PostFormTests(TestCase):
             slug='test-slug',
             description='Test_description'
         )
+        cls.group2 = Group.objects.create(
+            title='Test_title2',
+            slug='test-slug2',
+            description='Test_description2'
+        )
 
     def setUp(self):
         # создаем гостевого юзера
@@ -52,6 +57,7 @@ class PostFormTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_create_post(self):
+        """Проверка создания поста"""
         count_posts = Post.objects.count()
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
@@ -87,6 +93,7 @@ class PostFormTests(TestCase):
         self.assertEqual(post.group_id, form_data['group'])
 
     def test_authorized_user_create_comment(self):
+        """Проверка создания поста авторизованным юзером"""
         comments_count = Comment.objects.count()
         post = Post.objects.create(
             text='comment_text',
@@ -108,6 +115,7 @@ class PostFormTests(TestCase):
         )
 
     def test_nonauthorized_user_create_comment(self):
+        """Проверка создания поста не авторизованным юзером"""
         comments_count = Comment.objects.count()
         post = Post.objects.create(
             text='comment_text',
@@ -127,14 +135,15 @@ class PostFormTests(TestCase):
         self.assertRedirects(response, redirect)
 
     def test_authorized_user_edit_post(self):
-        # проверка редактирования записи авторизованным пользрвователем
+        """Проверка редактирования поста авторизованным юзером"""
         post = Post.objects.create(
             text='post_text',
-            author=self.post_author
+            author=self.post_author,
+            group=self.group
         )
         form_data = {
-            'text': 'post_text_edit',
-            'group': self.group.id
+            'text': 'post_text_edit2',
+            'group': self.group2.id
         }
         response = self.authorized_user.post(
             reverse(
@@ -152,9 +161,13 @@ class PostFormTests(TestCase):
         self.assertEqual(post_one.text, form_data['text'])
         self.assertEqual(post_one.author, self.post_author)
         self.assertEqual(post_one.group_id, form_data['group'])
+        self.assertTrue(Post.objects.filter(
+            group=self.group2.id,
+            author=self.post_author
+        ).exists())
 
     def test_nonauthorized_user_create_post(self):
-        # проверка создания записи не авторизованным пользователем
+        """Проверка создания поста неавторизованным юзером"""
         posts_count = Post.objects.count()
         form_data = {
             'text': 'non_auth_edit_text',

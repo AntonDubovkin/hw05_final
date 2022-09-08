@@ -49,11 +49,9 @@ def post_detail(request, post_id):
     post = get_object_or_404(
         Post.objects.select_related('author', 'group'),
         pk=post_id)
-    comments = post.comments.all()
     form = CommentForm(request.POST or None)
     context = {
         'post': post,
-        'comments': comments,
         'form': form,
     }
     return render(request, 'posts/post_detail.html', context)
@@ -62,11 +60,6 @@ def post_detail(request, post_id):
 @login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    # try:
-    #     post = Post.objects.get(id=post_id)
-    # except Post.DoesNotExist:
-    #     raise Http404('Обьект не найден')
-
     form = CommentForm(request.POST or None)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -111,14 +104,13 @@ def post_edit(request, post_id):
 
 @login_required
 def follow_index(request):
-    # получаем посты в которых author связан через модель Follows
-    # с текущим пользователем через request
-    # идем в Post, от туда через filter в author,
-    # далее через select_related (following) в Follow, далее user.
-    # Находим пользователя с заданным именем -
-    # для него ищем обьекты в таблицы Follow которые на него ссылаются,
-    # далее для всех найденых записей в Follow ищутся связанные с ним авторы,
-    # а далее все посты которые связаны с автором
+    """получаем посты в которых author связан через модель Follows
+    текущим пользователем через request идем в Post, от туда через filter
+     в author, далее через select_related (following) в Follow, далее user.
+     Находим пользователя с заданным именем - для него ищем обьекты в
+     таблицы Follow которые на него ссылаются далее для всех найденых з
+     аписей в Follow ищутся связанные с ним авторы,
+     а далее все посты которые связаны с автором"""
     posts = Post.objects.filter(author__following__user=request.user)
     context = {'page_obj': paginate(posts, request)}
     return render(request, 'posts/follow.html', context)
@@ -126,7 +118,7 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    # Получаем всех автров
+    """Получаем всех автров"""
     author = get_object_or_404(User, username=username)
     if author != request.user:
         Follow.objects.get_or_create(user=request.user, author=author)
@@ -135,6 +127,7 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
+    """Получаем всех подписанных юзеров и отписываем их"""
     user_follower = get_object_or_404(
         Follow,
         user=request.user,

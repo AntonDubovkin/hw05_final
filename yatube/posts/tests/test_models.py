@@ -12,11 +12,6 @@ class PostGroupModelTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create_user(username='auth')
-        # cls.group = Group.objects.create(
-        #     title='Тестовая группа',
-        #     slug='Тестовый слаг',
-        #     description='Тестовое описание',
-        # )
         cls.post = Post.objects.create(
             author=cls.user,
             text='Special test text more 15',
@@ -29,11 +24,12 @@ class PostGroupModelTest(TestCase):
         )
 
     def test_group_post_str(self):
+        """Проверка строкового представления для для post и group"""
         self.assertEqual(self.post.text[:15], str(self.post))
         self.assertEqual(self.group.title, str(self.group))
 
     def test_verbose_name_post(self):
-        """Verbose_name полях post совпадает с ожиданиями"""
+        """Verbose_name в полях post совпадает с ожиданиями"""
         field_verboses = {
             'text': 'Текст поста',
             'pub_date': 'Дата публикации',
@@ -56,7 +52,7 @@ class PostGroupModelTest(TestCase):
                 self.assertEqual(help_text, expected)
 
     def test_verbose_name_group(self):
-        """Verbose_name полях совпадает group с ожиданиями"""
+        """Verbose_name в полях совпадает group с ожиданиями"""
         field_verboses = {
             'title': 'Заголовок',
             'slug': 'slug',
@@ -80,12 +76,14 @@ class FollowModelTest(TestCase):
         )
 
     def test_follow_str(self):
+        """Проверка строкового представления в follow"""
         self.assertEqual(
             f'{self.follow.user} подписался на {self.follow.author}',
             str(self.follow)
         )
 
     def test_follow_verbose_name(self):
+        """Verbose_name в полях follow совпадает с ожиданием"""
         field_verboses = {
             'user': 'Пользователь',
             'author': 'Автор'
@@ -112,9 +110,11 @@ class CommentModelTest(TestCase):
         )
 
     def test_comment_str(self):
+        """Проверка строкового представления в comment"""
         self.assertEqual(self.comment.text[:15], str(self.comment))
 
     def test_comment_verbose_name(self):
+        """Verbose_name в полях comment совпадает с ожиданием"""
         field_verboses = {
             'post': 'post',
             'text': 'Текст комментария',
