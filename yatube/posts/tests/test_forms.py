@@ -167,10 +167,14 @@ class PostFormTests(TestCase):
                 text='post_text',
             ).exists()
         )
-        old_group_response = self.authorized_user.get(reverse('posts:group_list', args=(self.group_old.slug,)))
-        self.assertEqual(old_group_response.context['page_obj'].paginator.count, 0)
-        new_group_response = self.authorized_user.get(reverse('posts:group_list', args=(self.group_new.slug,)))
-        self.assertEqual(old_group_response.context['page_obj'].paginator.count + 1, 1)
+        old_group_response = self.authorized_user.get(
+            reverse('posts:group_list', args=(self.group_old.slug,)))
+        self.assertEqual(
+            old_group_response.context['page_obj'].paginator.count, 0)
+        new_group_response = self.authorized_user.get(
+            reverse('posts:group_list', args=(self.group_new.slug,)))
+        self.assertEqual(
+            new_group_response.context['page_obj'].paginator.count, 1)
 
     def test_nonauthorized_user_create_post(self):
         """Проверка создания поста неавторизованным юзером"""
